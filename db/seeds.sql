@@ -1,0 +1,3 @@
+INSERT INTO (department) VALUES (
+    id: INT PRIMARY KEY AUTO_INCREMENT
+)

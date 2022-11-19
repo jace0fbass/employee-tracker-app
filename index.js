@@ -151,26 +151,41 @@ const addRole = async () => {
 
 // ADD employee
 const addEmployee = async () => {
-  try {
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-// UPDATE department
-const updateDepartment = async () => {
-  try {
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-// UPDATE role
-const updateRole = async () => {
-  try {
-  } catch (err) {
-    throw new Error(err);
-  }
+  connection.query("SELECT * FROM role", async (err, res) => {
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "First name: "
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "Last name: "
+      },
+      {
+        type: "list",
+        name: "roleName",
+        message: "Role name: ",
+        choices: res.map(role => role.title)
+      },
+      {
+        type: "input",
+        name: "manager_id",
+        message: "What is the employee's manager's ID number?",
+        choices: res.map(manager_id => manager_id.id)
+      }
+    ])
+    try {
+      const role = res.find(role => role.title === answers.roleName);
+      const manager = res.find(manager => manager.id === answers.manager_id);
+      const [results] = await connection.promise().query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answers.first_name, answers.last_name, role.id, answers.manager_id])
+    } catch (err) {
+      throw new Error(err);
+    }
+    console.log("Employee added.")
+    startPrompt();
+  })
 };
 
 // UPDATE employee

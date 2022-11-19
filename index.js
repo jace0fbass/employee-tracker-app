@@ -15,9 +15,22 @@ const startPrompt = async () => {
       type: "list",
       name: "action",
       message: "What would you like to do?",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update a department", "Update a role", "Update an employee", "Delete a department", "Delete a role", "Delete an employee"]
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update a department",
+        "Update a role",
+        "Update an employee",
+        "Delete a department",
+        "Delete a role",
+        "Delete an employee",
+      ],
     },
-  ])
+  ]);
   if (answers.action === "View all departments") {
     getDepartments();
   } else if (answers.action === "View all roles") {
@@ -43,9 +56,9 @@ const startPrompt = async () => {
   } else if (answers.action === "Delete an employee") {
     deleteEmployee();
   } else {
-      process.exit(0)
+    process.exit(0);
   }
-}
+};
 
 // GET department
 const getDepartments = async () => {
@@ -63,9 +76,7 @@ const getDepartments = async () => {
 // GET role
 const getRoles = async () => {
   try {
-    const [results] = await connection
-      .promise()
-      .query("SELECT * FROM role");
+    const [results] = await connection.promise().query("SELECT * FROM role");
     console.table(results);
     startPrompt();
   } catch (err) {
@@ -88,49 +99,80 @@ const getEmployees = async () => {
 
 // ADD department
 const addDepartment = async () => {
-
+  try {
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // ADD role
 const addRole = async () => {
-
+  try {
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // ADD employee
 const addEmployee = async () => {
-
+  try {
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // UPDATE department
 const updateDepartment = async () => {
-
+  try {
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // UPDATE role
 const updateRole = async () => {
-
-};
+  try {
+  } catch (err) {
+      throw new Error(err);
+    }
+  };
 
 // UPDATE employee
 const updateEmployee = async () => {
+  try {
 
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // DELETE department
 const deleteDepartment = async () => {
+  try {
 
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // DELETE role
 const deleteRole = async () => {
+  try {
 
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // DELETE employee
 const deleteEmployee = async () => {
+  try {
 
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 // start the prompt
-startPrompt()
+startPrompt();
 export default connection;

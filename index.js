@@ -44,3 +44,4 @@ const connection = mysql.createConnection({
 
 
 // startPrompt()
+export default connection;

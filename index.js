@@ -99,18 +99,54 @@ const getEmployees = async () => {
 
 // ADD department
 const addDepartment = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "Department name: ",
+    },
+  ]);
   try {
-  } catch (err) {
-    throw new Error(err);
-  }
+    const [results] = await connection
+      .promise()
+      .query("INSERT INTO department (name) VALUES (?)", answers.name);
+    } catch (err) {
+      throw new Error(err);
+    }
+    console.log("Department added");
+    startPrompt();
 };
 
 // ADD role
 const addRole = async () => {
-  try {
-  } catch (err) {
-    throw new Error(err);
-  }
+  connection.query("SELECT * FROM department", async (err, res) => {
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "Role title: ",
+      },
+      {
+        type: "number",
+        name: "salary",
+        message: "Salary: ",
+      },
+      {
+        type: "list",
+        name: "departmentName",
+        message: "Department name: ",
+        choices: res.map((department) => department.name),
+      },
+    ]);
+    try {
+      const department = res.find(department => department.name === answers.departmentName)
+      const [results] = await connection.promise().query("INSERT INTO role (title, salary, department_Id) VALUES (?, ?, ?)", [answers.title, answers.salary, department.id]);
+    } catch (err) {
+      throw new Error(err);
+    }
+    console.log("Role added.");
+    startPrompt();
+  });
 };
 
 // ADD employee
@@ -133,14 +169,13 @@ const updateDepartment = async () => {
 const updateRole = async () => {
   try {
   } catch (err) {
-      throw new Error(err);
-    }
-  };
+    throw new Error(err);
+  }
+};
 
 // UPDATE employee
 const updateEmployee = async () => {
   try {
-
   } catch (err) {
     throw new Error(err);
   }
@@ -149,7 +184,6 @@ const updateEmployee = async () => {
 // DELETE department
 const deleteDepartment = async () => {
   try {
-
   } catch (err) {
     throw new Error(err);
   }
@@ -158,7 +192,6 @@ const deleteDepartment = async () => {
 // DELETE role
 const deleteRole = async () => {
   try {
-
   } catch (err) {
     throw new Error(err);
   }
@@ -167,7 +200,6 @@ const deleteRole = async () => {
 // DELETE employee
 const deleteEmployee = async () => {
   try {
-
   } catch (err) {
     throw new Error(err);
   }

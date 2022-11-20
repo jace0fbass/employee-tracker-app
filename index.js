@@ -41,7 +41,7 @@ const startPrompt = async () => {
     addRole();
   } else if (answers.action === "Add an employee") {
     addEmployee();
-  } else if (answers.action === "Update an employee's Manager") {
+  } else if (answers.action === "Update an employee's manager") {
     updateEmployeeManager();
   } else if (answers.action === "Delete a department") {
     deleteDepartment();

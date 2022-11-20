@@ -22,9 +22,7 @@ const startPrompt = async () => {
         "Add a department",
         "Add a role",
         "Add an employee",
-        "Update a department",
-        "Update a role",
-        "Update an employee",
+        "Update an employee's manager",
         "Delete a department",
         "Delete a role",
         "Delete an employee",
@@ -43,13 +41,9 @@ const startPrompt = async () => {
     addRole();
   } else if (answers.action === "Add an employee") {
     addEmployee();
-  } else if (answers.action === "Update a department") {
-    updateDepartment();
-  } else if (answers.action === "Update a role") {
-    updateRole();
-  } else if (answers.action === "Update an employee") {
-    updateEmployee();
-  } else if (answers.action === "Delete a departmemt") {
+  } else if (answers.action === "Update an employee's Manager") {
+    updateEmployeeManager();
+  } else if (answers.action === "Delete a department") {
     deleteDepartment();
   } else if (answers.action === "Delete a role") {
     deleteRole();
@@ -110,11 +104,11 @@ const addDepartment = async () => {
     const [results] = await connection
       .promise()
       .query("INSERT INTO department (name) VALUES (?)", answers.name);
-    } catch (err) {
-      throw new Error(err);
-    }
-    console.log("Department added");
-    startPrompt();
+  } catch (err) {
+    throw new Error(err);
+  }
+  console.log("Department added");
+  startPrompt();
 };
 
 // ADD role
@@ -139,8 +133,15 @@ const addRole = async () => {
       },
     ]);
     try {
-      const department = res.find(department => department.name === answers.departmentName)
-      const [results] = await connection.promise().query("INSERT INTO role (title, salary, department_Id) VALUES (?, ?, ?)", [answers.title, answers.salary, department.id]);
+      const department = res.find(
+        (department) => department.name === answers.departmentName
+      );
+      const [results] = await connection
+        .promise()
+        .query(
+          "INSERT INTO role (title, salary, department_Id) VALUES (?, ?, ?)",
+          [answers.title, answers.salary, department.id]
+        );
     } catch (err) {
       throw new Error(err);
     }
@@ -156,52 +157,97 @@ const addEmployee = async () => {
       {
         type: "input",
         name: "first_name",
-        message: "First name: "
+        message: "First name: ",
       },
       {
         type: "input",
         name: "last_name",
-        message: "Last name: "
+        message: "Last name: ",
       },
       {
         type: "list",
         name: "roleName",
         message: "Role name: ",
-        choices: res.map(role => role.title)
+        choices: res.map((role) => role.title),
       },
       {
         type: "input",
         name: "manager_id",
         message: "What is the employee's manager's ID number?",
-        choices: res.map(manager_id => manager_id.id)
-      }
-    ])
+        choices: res.map((manager_id) => manager_id.id),
+      },
+    ]);
     try {
-      const role = res.find(role => role.title === answers.roleName);
-      const manager = res.find(manager => manager.id === answers.manager_id);
-      const [results] = await connection.promise().query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answers.first_name, answers.last_name, role.id, answers.manager_id])
+      const role = res.find((role) => role.title === answers.roleName);
+      const manager = res.find((manager) => manager.id === answers.manager_id);
+      const [results] = await connection
+        .promise()
+        .query(
+          "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+          [answers.first_name, answers.last_name, role.id, answers.manager_id]
+        );
     } catch (err) {
       throw new Error(err);
     }
-    console.log("Employee added.")
+    console.log("Employee added.");
     startPrompt();
-  })
+  });
 };
 
-// UPDATE employee
-const updateEmployee = async () => {
-  try {
-  } catch (err) {
-    throw new Error(err);
-  }
+// UPDATE employee manager ///////////////  NOT DONE  ///////////////
+const updateEmployeeManager = async () => {
+  connection.query(
+    "SELECT * FROM employee WHERE manager_id NOT NULL",
+    async (err, res) => {
+      const answers = await inquirer.prompt([
+        {
+          type: "input",
+          name: "allEmps",
+          message: "Which employee is getting a new manager?.",
+        },
+        {
+          type: "input",
+          name: "newManager",
+          message: "What is the employee's new manager's ID number?",
+          choices: res.map((newManager) => newManager.id),
+        },
+      ]);
+      try {
+        const updatedManager = res.find(
+          (updatedManager) => updatedManager.id === answers.newManager
+        );
+        const [results] = await connection
+          .promise()
+          .query("INSERT INTO employee (manager_id) VALUES (?)", [
+            answers.newManager,
+          ]);
+      } catch (err) {
+        throw new Error(err);
+      }
+      console.log("Manager updated.");
+      startPrompt();
+    }
+  );
 };
 
 // DELETE department
 const deleteDepartment = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "Which department do you want to delete?",
+    },
+  ]);
   try {
+    const [results] = await connection
+      .promise()
+      .query("DELETE FROM department WHERE name=?", answers.name);
   } catch (err) {
     throw new Error(err);
   }
+  console.log("Department deleted.");
+  startPrompt();
 };
 
 // DELETE role
@@ -210,6 +256,8 @@ const deleteRole = async () => {
   } catch (err) {
     throw new Error(err);
   }
+  console.log("Role deleted.");
+  startPrompt();
 };
 
 // DELETE employee
@@ -218,6 +266,8 @@ const deleteEmployee = async () => {
   } catch (err) {
     throw new Error(err);
   }
+  console.log("Employee deleted.");
+  startPrompt();
 };
 
 // start the prompt

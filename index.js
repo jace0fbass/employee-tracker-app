@@ -298,7 +298,7 @@ const deleteEmployee = async () => {
   startPrompt();
 };
 
-// SUM of all salaries
+// SUM of all salaries ////////////  NOT DONE  //////////////
 const salarySum = async () => {
   try {
 

@@ -252,7 +252,17 @@ const deleteDepartment = async () => {
 
 // DELETE role
 const deleteRole = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "Which role do you want to delete?",
+    },
+  ]);
   try {
+    const [results] = await connection
+      .promise()
+      .query("DELETE FROM role WHERE title=?", answers.name);
   } catch (err) {
     throw new Error(err);
   }
@@ -262,7 +272,25 @@ const deleteRole = async () => {
 
 // DELETE employee
 const deleteEmployee = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "firstName",
+      message: "What is the first name of the employee you want to delete?",
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "What is the last name of the employee you want to delete?",
+    },
+  ]);
   try {
+    const [results] = await connection
+      .promise()
+      .query("DELETE FROM employee WHERE first_name=? AND last_name=?", [
+        answers.firstName,
+        answers.lastName,
+      ]);
   } catch (err) {
     throw new Error(err);
   }

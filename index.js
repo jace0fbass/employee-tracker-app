@@ -298,6 +298,17 @@ const deleteEmployee = async () => {
   startPrompt();
 };
 
+// SUM of all salaries
+const salarySum = async () => {
+  try {
+
+  } catch (err) {
+  throw new Error(err);
+  }
+  console.table(results)
+  startPrompt();
+};
+
 // start the prompt
 startPrompt();
 export default connection;

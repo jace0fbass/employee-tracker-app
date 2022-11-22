@@ -22,7 +22,6 @@ const startPrompt = async () => {
         "Add a department",
         "Add a role",
         "Add an employee",
-        "Update an employee's manager",
         "Delete a department",
         "Delete a role",
         "Delete an employee",
@@ -41,8 +40,6 @@ const startPrompt = async () => {
     addRole();
   } else if (answers.action === "Add an employee") {
     addEmployee();
-  } else if (answers.action === "Update an employee's manager") {
-    updateEmployeeManager();
   } else if (answers.action === "Delete a department") {
     deleteDepartment();
   } else if (answers.action === "Delete a role") {
@@ -194,42 +191,6 @@ const addEmployee = async () => {
   });
 };
 
-// UPDATE employee manager ///////////////  NOT DONE  ///////////////
-const updateEmployeeManager = async () => {
-  connection.query(
-    "SELECT * FROM employee WHERE manager_id NOT NULL",
-    async (err, res) => {
-      const answers = await inquirer.prompt([
-        {
-          type: "input",
-          name: "allEmps",
-          message: "Which employee is getting a new manager?.",
-        },
-        {
-          type: "input",
-          name: "newManager",
-          message: "What is the employee's new manager's ID number?",
-          choices: res.map((newManager) => newManager.id),
-        },
-      ]);
-      try {
-        const updatedManager = res.find(
-          (updatedManager) => updatedManager.id === answers.newManager
-        );
-        const [results] = await connection
-          .promise()
-          .query("INSERT INTO employee (manager_id) VALUES (?)", [
-            answers.newManager,
-          ]);
-      } catch (err) {
-        throw new Error(err);
-      }
-      console.log("Manager updated.");
-      startPrompt();
-    }
-  );
-};
-
 // DELETE department
 const deleteDepartment = async () => {
   const answers = await inquirer.prompt([
@@ -295,17 +256,6 @@ const deleteEmployee = async () => {
     throw new Error(err);
   }
   console.log("Employee deleted.");
-  startPrompt();
-};
-
-// SUM of all salaries ////////////  NOT DONE  //////////////
-const salarySum = async () => {
-  try {
-
-  } catch (err) {
-  throw new Error(err);
-  }
-  console.table(results)
   startPrompt();
 };
 

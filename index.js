@@ -26,6 +26,7 @@ const startPrompt = async () => {
         "Delete a role",
         "Delete an employee",
         "Update an employee's role",
+        "Update an employee's manager"
       ],
     },
   ]);
@@ -49,6 +50,8 @@ const startPrompt = async () => {
     deleteEmployee();
   } else if (answers.action === "Update an employee's role") {
     updateEmployeeRole();
+  } else if (answers.action === "Update an employee's manager") {
+    updateEmployeeManager();
   } else {
     process.exit(0);
   }
@@ -296,6 +299,45 @@ const updateEmployeeRole = async () => {
     .query(
       "UPDATE Employee SET role_id = ? WHERE first_name = ? AND last_name = ?",
       [answers.role_id, answers.first_name, answers.last_name]
+    );
+  console.log("Employee updated.");
+  startPrompt();
+};
+
+// UPDATE employee manager
+const updateEmployeeManager = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "text",
+      name: "first_name",
+      message: "Enter employee's first name",
+    },
+    {
+      type: "text",
+      name: "last_name",
+      message: "Enter employee's last name",
+    },
+    {
+      type: "number",
+      name: "manager_id",
+      message: "What is the employee's new manager's ID?",
+      default: async (inqSession) => {
+        const [results] = await connection
+          .promise()
+          .query(
+            "SELECT manager_id FROM employee WHERE first_name = ? AND last_name = ?",
+            [inqSession.first_name, inqSession.last_name]
+          );
+        return results[0].manager_id;
+      },
+    },
+  ]);
+
+  const [results] = await connection
+    .promise()
+    .query(
+      "UPDATE Employee SET manager_id = ? WHERE first_name = ? AND last_name = ?",
+      [answers.manager_id, answers.first_name, answers.last_name]
     );
   console.log("Employee updated.");
   startPrompt();

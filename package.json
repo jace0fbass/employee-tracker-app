@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,8 +15,5 @@
     "console.table": "^0.10.0", 
     "inquirer": "^9.1.4",
     "mysql2": "^2.3.3"
-  },
-  "devDependencies": { 
-    "nodemon": "^2.0.20"
   }
 }

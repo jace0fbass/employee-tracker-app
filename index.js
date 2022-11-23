@@ -25,6 +25,7 @@ const startPrompt = async () => {
         "Delete a department",
         "Delete a role",
         "Delete an employee",
+        "Update an employee's role",
       ],
     },
   ]);
@@ -46,6 +47,8 @@ const startPrompt = async () => {
     deleteRole();
   } else if (answers.action === "Delete an employee") {
     deleteEmployee();
+  } else if (answers.action === "Update an employee's role") {
+    updateEmployeeRole();
   } else {
     process.exit(0);
   }
@@ -203,7 +206,7 @@ const deleteDepartment = async () => {
   try {
     const [results] = await connection
       .promise()
-      .query("DELETE FROM department WHERE name=?", answers.name);
+      .query("DELETE FROM department WHERE name = ?", answers.name);
   } catch (err) {
     throw new Error(err);
   }
@@ -223,7 +226,7 @@ const deleteRole = async () => {
   try {
     const [results] = await connection
       .promise()
-      .query("DELETE FROM role WHERE title=?", answers.name);
+      .query("DELETE FROM role WHERE title = ?", answers.name);
   } catch (err) {
     throw new Error(err);
   }
@@ -248,7 +251,7 @@ const deleteEmployee = async () => {
   try {
     const [results] = await connection
       .promise()
-      .query("DELETE FROM employee WHERE first_name=? AND last_name=?", [
+      .query("DELETE FROM employee WHERE first_name = ? AND last_name = ?", [
         answers.firstName,
         answers.lastName,
       ]);
@@ -256,6 +259,45 @@ const deleteEmployee = async () => {
     throw new Error(err);
   }
   console.log("Employee deleted.");
+  startPrompt();
+};
+
+// UPDATE employee role
+const updateEmployeeRole = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "text",
+      name: "first_name",
+      message: "Enter employee's first name",
+    },
+    {
+      type: "text",
+      name: "last_name",
+      message: "Enter employee's last name",
+    },
+    {
+      type: "number",
+      name: "role_id",
+      message: "What is the employee's new role ID?",
+      default: async (inqSession) => {
+        const [results] = await connection
+          .promise()
+          .query(
+            "SELECT role_id FROM employee WHERE first_name = ? AND last_name = ?",
+            [inqSession.first_name, inqSession.last_name]
+          );
+        return results[0].role_id;
+      },
+    },
+  ]);
+
+  const [results] = await connection
+    .promise()
+    .query(
+      "UPDATE Employee SET role_id = ? WHERE first_name = ? AND last_name = ?",
+      [answers.role_id, answers.first_name, answers.last_name]
+    );
+  console.log("Employee updated.");
   startPrompt();
 };
 

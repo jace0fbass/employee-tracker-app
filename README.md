@@ -7,7 +7,7 @@ In this challenge I have used inquirer, mysql and console.table to create a comm
 To use this application, users must npm install <a href="https://www.npmjs.com/package/inquirer">Inquirer</a> and <a href="https://www.npmjs.com/package/console.table">console.table</a> as well as install <a href="https://coding-boot-camp.github.io/full-stack/mysql/mysql-installation-guide">MySQL</a>.
 
 ## Walkthrough 
-<a href="https://drive.google.com/file/d/1vFpvm-jsxe-CT85Lw1W8XtBNVmZ4vnUt/view">View Walkthrough</a>
+<a href="https://drive.google.com/file/d/1AmvgNC4SFfPonBIA-ufNyzDFIg0vaSgj/view">View Walkthrough</a>
 
 
 

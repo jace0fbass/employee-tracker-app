@@ -8,7 +8,6 @@ const connection = mysql.createConnection({
   database: "employee_tracker_app_db",
 });
 
-// function to start prompt
 const startPrompt = async () => {
   const answers = await inquirer.prompt([
     {
@@ -26,7 +25,7 @@ const startPrompt = async () => {
         "Delete a role",
         "Delete an employee",
         "Update an employee's role",
-        "Update an employee's manager"
+        "Update an employee's manager",
       ],
     },
   ]);
@@ -57,7 +56,6 @@ const startPrompt = async () => {
   }
 };
 
-// GET department
 const getDepartments = async () => {
   try {
     const [results] = await connection
@@ -70,7 +68,6 @@ const getDepartments = async () => {
   }
 };
 
-// GET role
 const getRoles = async () => {
   try {
     const [results] = await connection.promise().query("SELECT * FROM role");
@@ -81,7 +78,6 @@ const getRoles = async () => {
   }
 };
 
-// GET employee
 const getEmployees = async () => {
   try {
     const [results] = await connection
@@ -94,7 +90,6 @@ const getEmployees = async () => {
   }
 };
 
-// ADD department
 const addDepartment = async () => {
   const answers = await inquirer.prompt([
     {
@@ -114,7 +109,6 @@ const addDepartment = async () => {
   startPrompt();
 };
 
-// ADD role
 const addRole = async () => {
   connection.query("SELECT * FROM department", async (err, res) => {
     const answers = await inquirer.prompt([
@@ -153,7 +147,6 @@ const addRole = async () => {
   });
 };
 
-// ADD employee
 const addEmployee = async () => {
   connection.query("SELECT * FROM role", async (err, res) => {
     const answers = await inquirer.prompt([
@@ -197,7 +190,6 @@ const addEmployee = async () => {
   });
 };
 
-// DELETE department
 const deleteDepartment = async () => {
   const answers = await inquirer.prompt([
     {
@@ -217,7 +209,6 @@ const deleteDepartment = async () => {
   startPrompt();
 };
 
-// DELETE role
 const deleteRole = async () => {
   const answers = await inquirer.prompt([
     {
@@ -237,7 +228,6 @@ const deleteRole = async () => {
   startPrompt();
 };
 
-// DELETE employee
 const deleteEmployee = async () => {
   const answers = await inquirer.prompt([
     {
@@ -265,7 +255,6 @@ const deleteEmployee = async () => {
   startPrompt();
 };
 
-// UPDATE employee role
 const updateEmployeeRole = async () => {
   const answers = await inquirer.prompt([
     {
@@ -304,7 +293,6 @@ const updateEmployeeRole = async () => {
   startPrompt();
 };
 
-// UPDATE employee manager
 const updateEmployeeManager = async () => {
   const answers = await inquirer.prompt([
     {
@@ -343,6 +331,5 @@ const updateEmployeeManager = async () => {
   startPrompt();
 };
 
-// start the prompt
 startPrompt();
 export default connection;
